@@ -28,8 +28,8 @@ module Fetch_Decode_Moderator(
         input DUMP,
         input STALL,
         
-        output [31:0] Instruction_In,
-        output [15:0] PC_In_Decode
+        output [31:0] Instruction_In, //goes IN to Decode
+        output [15:0] PC_In_Decode   // goes In to decode
                 
     );
     
@@ -46,14 +46,14 @@ assign Instruction_Out_2 = (STALL === 1) ? Instruction_In:
 assign Instruction_Out_3 = (DUMP === 1) ? 32'h00000013:    //dump data, make instruction "add R0 + 0 to R0;"
                                           Instruction_Out_2;
 
-assign Instruction_In = Instruction_Reg_ID;
+assign Instruction_In = Instruction_Reg_ID; // assign the output wire to the output of the register
 
 //Stall mux for the PC. If stall, we feed back the output PC from register back into register
 //otherwise, get PC from Fetch
 assign PC_OUT_2 = (STALL === 1) ? PC_In_Decode:
                                   PC_Out_Fetch; 
                           
-assign PC_In_DECODE = PC_Reg_ID;
+assign PC_In_DECODE = PC_Reg_ID;  // assign the output wire to the output of the register
 
 //registers only change at posedge
 always @(posedge clock)
